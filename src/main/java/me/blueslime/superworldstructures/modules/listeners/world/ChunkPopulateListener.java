@@ -99,6 +99,9 @@ public class ChunkPopulateListener implements Listener {
 
         block.setDirectionX(random.nextInt(16));
         block.setDirectionZ(random.nextInt(16));
+        if (debug) {
+            plugin.info("&9[Debug Mode] &eTrying to paste structure");
+        }
 
         List<StructurePlace> chosenPossiblePlaces = new ArrayList<>();
         Map<String, Structure> structureIdMap = new HashMap<>();

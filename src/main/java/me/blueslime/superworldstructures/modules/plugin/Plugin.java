@@ -54,9 +54,9 @@ public abstract class Plugin extends JavaPlugin {
 
         if (!worlds.exists() && worlds.mkdirs()) {
             FileUtilities.saveResource(
-                new File(worlds, "world.yml"), getResource("/world-template.yml")
+                new File(worlds, "world.yml"), Plugin.class.getResourceAsStream("/world-template.yml")
             );
-            getLogger().info("World forder created");
+            getLogger().info("World folder created");
         }
     }
 
@@ -131,7 +131,10 @@ public abstract class Plugin extends JavaPlugin {
 
         if (file.exists()) {
             PluginConsumer.process(
-                () -> configuration.save(file)
+                () -> {
+                    configuration.save(file);
+                    reloadConfiguration();
+                }
             );
         }
     }
@@ -139,7 +142,12 @@ public abstract class Plugin extends JavaPlugin {
     public FileConfiguration loadConfiguration(File folder, String child) {
         File file = new File(folder, child);
 
-        FileUtilities.saveResource(file, child.startsWith("/") ? getResource(child) : getResource("/" + child));
+        FileUtilities.saveResource(
+            file,
+            child.startsWith("/") ?
+                Plugin.class.getResourceAsStream(child) :
+                Plugin.class.getResourceAsStream("/" + child)
+        );
 
         if (file.exists()) {
             return YamlConfiguration.loadConfiguration(file);
@@ -189,6 +197,10 @@ public abstract class Plugin extends JavaPlugin {
 
     public void reloadConfigurations() {
         structures = loadConfiguration(getDataFolder(), "structures.yml");
+        settings = loadConfiguration(getDataFolder(), "settings.yml");
+    }
+
+    public void reloadConfiguration() {
         settings = loadConfiguration(getDataFolder(), "settings.yml");
     }
 }
