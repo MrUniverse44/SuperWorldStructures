@@ -1,0 +1,4 @@
+name: SuperWorldStructures
+version: '${project.version}'
+main: me.blueslime.superworldstructures.SuperWorldStructures
+api-version: '1.20'
