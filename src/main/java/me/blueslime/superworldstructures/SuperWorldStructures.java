@@ -48,6 +48,8 @@ public final class SuperWorldStructures extends Plugin {
 
     @Override
     public void reload() {
+        reloadConfigurations();
+
         for (PluginModule module : getModules().values()) {
             module.reload();
         }

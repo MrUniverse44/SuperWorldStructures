@@ -186,4 +186,9 @@ public abstract class Plugin extends JavaPlugin {
     public void log() {
         getLogger().info("Registered Custom Logger");
     }
+
+    public void reloadConfigurations() {
+        structures = loadConfiguration(getDataFolder(), "structures.yml");
+        settings = loadConfiguration(getDataFolder(), "settings.yml");
+    }
 }
