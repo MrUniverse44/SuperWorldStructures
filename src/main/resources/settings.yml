@@ -1,0 +1,54 @@
+# SuperWorldStructures
+# v1.0.0
+
+# Toggle the debug mode
+# With this mode the developer can find issues or bugs, if you have a bug
+# Please report it
+debug-mode: false
+
+# Global configuration
+#   show structure locations: Show structure locations to the console
+#   blacklisted water level: this option will block the place of structures on Full Water Blocks by default, see: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/block/data/Levelled.html
+#   chunk spawn change: Recommended a number between 1 or 5, a number over 10 might make structures to crowded world
+#   space-blacklist: this option will block the place of structures in specified Block Types. Full block list: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+global-configuration:
+  show-structure-locations: true
+  blacklisted-water-level: 6
+  chunk-spawn-chance: 1
+  space-blacklist:
+    underground:
+      - BEDROCK
+      - VOID_AIR
+    ground:
+      - AIR
+      - LEAVES
+      - SNOW
+      - ACACIA_LEAVES
+      - AZALEA_LEAVES
+      - OAK_LEAVES
+      - SPRUCE_LEAVES
+      - BIRCH_LEAVES
+      - JUNGLE_LEAVES
+      - CHERRY_LEAVES
+      - DARK_OAK_LEAVES
+      - MANGROVE_LEAVES
+      - FLOWERING_AZALEA_LEAVES
+
+# DO NOT EDIT THIS SECTION <- WARNING!
+#   In this section you will see a mini-database
+#   Here the plugin will storage the number of structures generated in a world with coords template and coords.
+spawned-structures: {}
+
+#
+# Add a new world with this next template:
+# world-files:
+#   <world-name>:
+#     file-name: <name of the file in the worlds folder>
+#
+# You can use the same file for different worlds.
+# And the configuration will be shared for these worlds.
+# By default, the plugin only uses world.yml for world called 'world'
+#
+world-files:
+  world:
+    file-name: world.yml

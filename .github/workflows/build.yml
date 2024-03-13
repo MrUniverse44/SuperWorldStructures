@@ -1,0 +1,44 @@
+name: "Build"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'java' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: 'Setup JDK'
+        uses: 'actions/setup-java@v1'
+        with:
+          java-version: 1.8
+
+      - name: Build with Maven
+        run: mvn package
+
+      - name: Compile Spigot (BuildTools)
+        uses: SpraxDev/Action-SpigotMC@v5
+        with:
+          versions: latest
+          generateSrc: false
+          generateDoc: false
+          disableJavaCheck: false
+          forceRun: false
+          threads: -1
+          buildToolProvider: SpigotMC

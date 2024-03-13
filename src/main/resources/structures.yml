@@ -1,0 +1,45 @@
+# Structures configuration
+#
+# SuperWorldStructures
+# v1.0.0 Beta
+
+# schematics: A random schematic of this path will be selected.
+# basement-depth: if you have blocks that should be underground,
+#   this is the number of Y-blocks that you want underground,
+#   example:
+#     if I had a building of 75 blocks high,
+#     and I only want 10 to be in the above ground,
+#     I would put 60 as the basement-depth.
+#
+# paste-biome: This option changes the biome of that current location to the schematic biomes. Default: false
+# paste-entities: This option spawns entities of the schematic to the specified location. Default: true
+#
+# spawn-chance: change the chance of a structure to spawn
+# anywhere: This path configuration is only for space 'ANYWHERE', this is the Y configuration for the schematic.
+#   - SPECIAL MENTION: for UNDER_GROUND, the minY will be used for the min paste location for your schematic.
+# rotation: In the rotation you can put 'NONE' to disable rotations, 'RANDOM' for a random rotation or the specified rotation example: rotation: 90
+# biomes: Name of the possible biome to spawn this structure. Biome list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/block/Biome.html
+# spaces: GROUND, SKY, ANYWHERE, AIR, UNDER_GROUND
+# air: This will paste air blocks of the schematics, disable it if you want to ignore air blocks.
+# max: This is the max number of structures in a world of this type. (Put -1 to disable it.)
+structures:
+  structure-1:
+    schematics:
+      - "HOUSE.schem"
+    places:
+      '1':
+        basement-depth: 0
+        spawn-chance: 10
+        rotation: RANDOM
+        paste-biome: false
+        paste-entities: true
+        anywhere:
+          minY: 60
+          maxY: 80
+        biomes:
+          - FLOWER_FOREST
+          - FOREST
+          - PLAINS
+        space: GROUND
+        air: false
+        max: -1

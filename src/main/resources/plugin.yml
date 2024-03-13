@@ -1,4 +1,12 @@
 name: SuperWorldStructures
 version: '${project.version}'
 main: me.blueslime.superworldstructures.SuperWorldStructures
-api-version: '1.20'
+api-version: '1.13'
+author: JustJustin
+depend: [ FastAsyncWorldEdit ]
+database: false
+authors: [ JustJustin ]
+description: A World Structure plugin created with FastAsyncWorldEdit
+permissions:
+  superworldstructures.admin:
+    default: op

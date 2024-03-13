@@ -1,0 +1,11 @@
+# World configuration
+# v1.0.0
+
+# Load this file
+enabled: true
+
+# Structures of the structures.yml
+# Put here the key of the structure
+# here structures will load for a specified world
+enabled-structures:
+  - 'structure-1'
