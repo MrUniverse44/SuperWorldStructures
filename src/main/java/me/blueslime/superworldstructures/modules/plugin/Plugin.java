@@ -30,6 +30,10 @@ public abstract class Plugin extends JavaPlugin {
                 .split(",")[3];
 
         serverVersion = version.substring(0, version.lastIndexOf("_"));
+
+        registerModules();
+
+        loadModules();
     }
 
     public void refreshStructures() {
