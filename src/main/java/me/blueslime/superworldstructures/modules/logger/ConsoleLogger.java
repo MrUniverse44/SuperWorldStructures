@@ -10,6 +10,21 @@ public class ConsoleLogger extends PluginModule {
     }
 
     @Override
+    public void initialize() {
+
+    }
+
+    @Override
+    public void shutdown() {
+
+    }
+
+    @Override
+    public void reload() {
+
+    }
+
+    @Override
     public ConsoleLogger getLogger() {
         return this;
     }
