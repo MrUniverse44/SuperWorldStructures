@@ -83,7 +83,7 @@ public class ChunkPopulateListener implements Listener {
 
         if (random.nextInt(100) + 1 > plugin.getSettings().getInt("global-configuration.chunk-spawn-chance", 1)) {
             if (debug) {
-                plugin.info("&9[Debug Mode] &cNot going to load structures, because the spawn chance failed.");
+                plugin.info("&9[Debug Mode] &7Not going to load structures, because the spawn chance failed.");
             }
             return;
         }
@@ -92,7 +92,12 @@ public class ChunkPopulateListener implements Listener {
 
         if (structureList == null || structureList.isEmpty()) {
             if (debug) {
-                plugin.info("&9[Debug Mode] &cCan't find custom structures for world: &f" + block.getWorldName());
+                plugin.info("&9[Debug Mode] &eCan't find custom structures for world: &a" + block.getWorldName());
+                if (structureList == null) {
+                    plugin.info("&9[Debug Mode] &7Null Structures");
+                } else {
+                    plugin.info("&9[Debug Mode] &7No Structures");
+                }
             }
             return;
         }

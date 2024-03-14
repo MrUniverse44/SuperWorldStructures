@@ -1,7 +1,7 @@
 SUPER WORLD STRUCTURES
 ---
 
-* Spigot 1.13 - 1.20.x
+* Spigot 1.20.x+
 * Created with FastAsyncWorldEdit
 * All World Generators Support
 * Support for entities in a schematic
@@ -9,6 +9,8 @@ SUPER WORLD STRUCTURES
 * Full Customization for structures conditions
 * Free & Open Source
 
+## WARN!
+This plugin only works with Java 21+
 ___
 ## Developing
 * Structure locate command

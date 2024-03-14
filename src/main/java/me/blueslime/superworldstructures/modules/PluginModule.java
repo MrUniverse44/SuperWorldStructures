@@ -48,6 +48,10 @@ public abstract class PluginModule implements PluginLogger {
         return plugin.getStructures();
     }
 
+    public boolean isDebug() {
+        return getSettings().getBoolean("debug-mode", false);
+    }
+
     public Collection<? extends Player> getOnlinePlayers() {
         return getServer().getOnlinePlayers();
     }

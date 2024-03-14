@@ -33,7 +33,7 @@ public class ConsoleLogger extends PluginModule {
     public void info(String... messages) {
         for (String message : messages) {
             getServer().getConsoleSender().sendMessage(
-                    TextUtilities.colorize("&3[&bKitPvP&3]&f " + message)
+                    TextUtilities.colorize("&3[&bSuperWorldStructures&3]&f " + message)
             );
         }
     }
