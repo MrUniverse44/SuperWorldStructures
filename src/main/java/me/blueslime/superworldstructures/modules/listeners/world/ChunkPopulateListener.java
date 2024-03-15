@@ -359,7 +359,7 @@ public class ChunkPopulateListener implements Listener {
 
             String id = split[0].replace("Structure:", "");
 
-            if (place.isCheck() && !id.equals(place.getStructureId())) {
+            if (place.isCheck() && !id.equalsIgnoreCase(place.getStructureId())) {
                 continue;
             }
 
@@ -374,6 +374,10 @@ public class ChunkPopulateListener implements Listener {
             int x2 = splitValues.length >= 1 && !splitValues[0].isEmpty() ? PluginTools.isNumber(splitValues[0]) ? Integer.parseInt(splitValues[0]) : 0 : 0;
             int y2 = splitValues.length >= 2 && !splitValues[1].isEmpty() ? PluginTools.isNumber(splitValues[1]) ? Integer.parseInt(splitValues[1]) : 0 : 0;
             int z2 = splitValues.length >= 3 && !splitValues[1].isEmpty() ? PluginTools.isNumber(splitValues[2]) ? Integer.parseInt(splitValues[2]) : 0 : 0;
+
+            if (plugin.getSettings().getBoolean("debug-mode")) {
+                plugin.info("Checking: x1: " + block.getDirectionX() + " with x2: " + x2 + ", y1: " + block.getHeight() + " with y2: " + y2 + " and z1: " + block.getDirectionZ() + " with x2: " + z2);
+            }
 
             double distance = Math.sqrt(Math.pow(x2 - block.getDirectionX(), 2) + Math.pow(y2 - block.getHeight(), 2) + Math.pow(z2 - block.getDirectionZ(), 2));
 
