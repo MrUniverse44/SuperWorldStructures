@@ -132,17 +132,21 @@ public class ChunkPopulateListener implements Listener {
             }
         }
 
-        StructurePlace structurePlace = chosenPossiblePlaces.remove(
-                random.nextInt(chosenPossiblePlaces.size())
-        );
+        if (chosenPossiblePlaces.isEmpty()) {
+            return;
+        }
+
+        StructurePlace structurePlace = chosenPossiblePlaces.size() >= 2 ? chosenPossiblePlaces.remove(
+            random.nextInt(chosenPossiblePlaces.size())
+        ) : chosenPossiblePlaces.getFirst();
 
         Structure structure = structureIdMap.remove(
-                structurePlace.getStructureId()
+            structurePlace.getStructureId()
         );
 
-        String chosenSchematic = structure.getSchematics().get(
-                random.nextInt(structure.getSchematics().size())
-        );
+        String chosenSchematic = structure.getSchematics().size() >= 2 ? structure.getSchematics().get(
+            random.nextInt(structure.getSchematics().size())
+        ) : structure.getSchematics().getFirst();
 
         if (debug) {
             plugin.info("&6Selected structure id for a chunk: &f" + structure.getId());
@@ -161,32 +165,40 @@ public class ChunkPopulateListener implements Listener {
         }
 
         if (plugin.getSettings().contains("spawned-structures." + block.getWorldName())) {
-            if (structurePlace.getMax() <= plugin.getSettings().getStringList("spawned-structures." + block.getWorldName()).size()) {
-                return;
+            if (structurePlace.getMax() != -1 && structurePlace.getMax() != 0) {
+                if (structurePlace.getMax() <= plugin.getSettings().getStringList("spawned-structures." + block.getWorldName()).size()) {
+                    if (debug) {
+                        plugin.info("&9[Debug Mode] &6The plugin will not paste this schematic because the max is supposed to be overpassed.");
+                    }
+                    return;
+                }
             }
         }
 
+        if (!file.exists()) {
+            plugin.info("&7Can't find structure: &f" + file.getName());
+        }
+
         ClipboardFormat format = ClipboardFormats.findByFile(
-                file
+            file
         );
 
         Clipboard clipboard = PluginConsumer.ofUnchecked(
-                () -> {
-                    if (format != null) {
-                        ClipboardReader reader = format.getReader(Files.newInputStream(file.toPath()));
+            () -> {
+                if (format != null) {
+                    ClipboardReader reader = format.getReader(Files.newInputStream(file.toPath()));
+                    return reader.read();
+                }
+                return null;
+            },
+            e -> {
+                plugin.info("&cCan't load a clipboard because the FastAsyncWorldEdit can't read the clipboard");
 
-                        return reader.read();
-                    }
-                    return null;
-                },
-                e -> {
-                    plugin.info("&cCan't load a clipboard because the FastAsyncWorldEdit can't read the clipboard");
-
-                    if (debug) {
-                        e.printStackTrace();
-                    }
-                },
-                null
+                if (debug) {
+                    e.printStackTrace();
+                }
+            },
+            null
         );
 
         if (clipboard == null) {
@@ -245,6 +257,7 @@ public class ChunkPopulateListener implements Listener {
             boolean end = false;
 
             for (int current = maxHeight; current > minArea; current--) {
+                block.reduce();
                 if (!fetchBlockData(block, "AIR", "VOID_AIR", "LEGACY_AIR", "CAVE_AIR")) {
                     end = true;
                     break;
