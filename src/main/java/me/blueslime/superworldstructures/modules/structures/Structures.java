@@ -19,7 +19,7 @@ public class Structures extends PluginModule {
     public void initialize() {
         shutdown();
 
-        ConfigurationSection section = getSettings().getConfigurationSection("structures");
+        ConfigurationSection section = getStructures().getConfigurationSection("structures");
 
         if (isDebug()) {
             info("&9[Debug Mode] &7Loading Structures module");
@@ -41,7 +41,7 @@ public class Structures extends PluginModule {
             structureMap.put(
                 key,
                 new Structure(
-                    getSettings(),
+                    getStructures(),
                     "structures." + key,
                     key
                 )
