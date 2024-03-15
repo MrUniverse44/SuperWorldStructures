@@ -371,7 +371,7 @@ public class ChunkPopulateListener implements Listener {
 
             String defValues = split.length >= 2 ? split[1] : "x=0y=0z=0";
 
-            defValues = defValues.replace("x=", ",")
+            defValues = defValues.replace("x=", "")
                     .replace("y=", ",")
                     .replace("z=", ",")
                     .replace(" ", "");
