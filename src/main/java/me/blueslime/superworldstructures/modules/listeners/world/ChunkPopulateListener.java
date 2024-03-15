@@ -354,10 +354,16 @@ public class ChunkPopulateListener implements Listener {
     }
 
     public boolean isCorrectDistance(StructurePlace place, WorldBlock block) {
+        boolean debug = plugin.getSettings().getBoolean("debug-mode", false);
         for (String location : plugin.getSettings().getStringList("spawned-structures." + block.getWorldName())) {
-            String[] split = location.replace(" ", "").split(";", 2);
+            String[] split = location.replace(" ", "").split(";");
 
-            String id = split[0].replace("Structure:", "");
+            String id = split[0].replace("Structure:", "")
+                    .replace(" ", "");
+
+            if (debug) {
+                plugin.info("Checking collision with structure id: " + id);
+            }
 
             if (place.isCheck() && !id.equalsIgnoreCase(place.getStructureId())) {
                 continue;
@@ -367,15 +373,20 @@ public class ChunkPopulateListener implements Listener {
 
             defValues = defValues.replace("x=", ",")
                     .replace("y=", ",")
-                    .replace("z=", ",");
+                    .replace("z=", ",")
+                    .replace(" ", "");
 
-            String[] splitValues = defValues.split(",", 3);
+            if (debug) {
+                plugin.info("Checking collision with parameters: '" + defValues + "'");
+            }
+
+            String[] splitValues = defValues.split(",");
 
             int x2 = splitValues.length >= 1 && !splitValues[0].isEmpty() ? PluginTools.isNumber(splitValues[0]) ? Integer.parseInt(splitValues[0]) : 0 : 0;
             int y2 = splitValues.length >= 2 && !splitValues[1].isEmpty() ? PluginTools.isNumber(splitValues[1]) ? Integer.parseInt(splitValues[1]) : 0 : 0;
             int z2 = splitValues.length >= 3 && !splitValues[1].isEmpty() ? PluginTools.isNumber(splitValues[2]) ? Integer.parseInt(splitValues[2]) : 0 : 0;
 
-            if (plugin.getSettings().getBoolean("debug-mode")) {
+            if (debug) {
                 plugin.info("Checking: x1: " + block.getDirectionX() + " with x2: " + x2 + ", y1: " + block.getHeight() + " with y2: " + y2 + " and z1: " + block.getDirectionZ() + " with x2: " + z2);
             }
 
