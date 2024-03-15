@@ -1,11 +1,16 @@
 package me.blueslime.superworldstructures.modules.listeners.world;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import me.blueslime.superworldstructures.SuperWorldStructures;
 import me.blueslime.superworldstructures.modules.structures.place.StructurePlace;
 import me.blueslime.superworldstructures.modules.structures.space.StructureSpace;
@@ -205,6 +210,21 @@ public class ChunkPopulateListener implements Listener {
             return;
         }
 
+        BukkitWorld bukkitWorld = new BukkitWorld(block.getWorld());
+
+        EditSession session = PluginConsumer.ofUnchecked(
+                () -> WorldEdit.getInstance().newEditSessionBuilder().world(bukkitWorld).build(),
+                e -> {
+                    plugin.info("&cCan't initialize the session event.");
+                    e.printStackTrace();
+                },
+                null
+        );
+
+        if (session == null) {
+            return;
+        }
+
         int height = clipboard.getHeight();
         int width = clipboard.getWidth();
         int length = clipboard.getLength();
@@ -222,9 +242,7 @@ public class ChunkPopulateListener implements Listener {
             if (calculate > maxHeight - height) {
                 return;
             }
-        }
-
-        if (structurePlace.getSpace() == StructureSpace.GROUND) {
+        } else if (structurePlace.getSpace() == StructureSpace.GROUND) {
             int basementDepth = structurePlace.getBasementDepth();
 
             block.setHeight(maxHeight);
@@ -248,15 +266,14 @@ public class ChunkPopulateListener implements Listener {
                     return;
                 }
             }
-        }
-        if (structurePlace.getSpace() == StructureSpace.AIR || structurePlace.getSpace() == StructureSpace.SKY) {
+        } else if (structurePlace.getSpace() == StructureSpace.AIR || structurePlace.getSpace() == StructureSpace.SKY) {
             block.setHeight(maxHeight);
 
             int minArea = maxHeight - height;
 
             boolean end = false;
 
-            for (int current = maxHeight; current > minArea; current--) {
+            for (int current = maxHeight; current >= minArea; current--) {
                 block.reduce();
                 if (!fetchBlockData(block, "AIR", "VOID_AIR", "LEGACY_AIR", "CAVE_AIR")) {
                     end = true;
@@ -271,8 +288,7 @@ public class ChunkPopulateListener implements Listener {
             if (!fetchBlockData(block, "AIR", "VOID_AIR", "LEGACY_AIR", "CAVE_AIR")) {
                 return;
             }
-        }
-        if (structurePlace.getSpace() == StructureSpace.UNDER_GROUND) {
+        } else if (structurePlace.getSpace() == StructureSpace.UNDER_GROUND) {
             int placeY = block.getUnderBlock(random, structurePlace.getMinY());
 
             List<String> blacklistedBlocks = plugin.getSettings().getStringList("global-configuration.space-blacklist.underground");
@@ -292,13 +308,20 @@ public class ChunkPopulateListener implements Listener {
         }
 
         PluginConsumer.process(
-            () -> clipboard.paste(
-                new BukkitWorld(block.getWorld()),
-                BlockVector3.at(block.getDirectionX(), block.getHeight(), block.getDirectionZ()),
-                structurePlace.isPasteAir(),
-                structurePlace.isPasteEntities(),
-                structurePlace.isPasteBiome()
-            )
+            () -> {
+                Operation operation = new ClipboardHolder(clipboard)
+                        .createPaste(session)
+                        .to(BlockVector3.at(block.getDirectionX(), block.getHeight(), block.getDirectionZ()))
+                        .ignoreAirBlocks(structurePlace.isPasteAir())
+                        .copyBiomes(structurePlace.isPasteBiome())
+                        .copyEntities(structurePlace.isPasteEntities())
+                        .build();
+
+                Operations.complete(
+                    operation
+                );
+                session.close();
+            }
         );
 
         List<String> locations = new ArrayList<>();
