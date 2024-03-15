@@ -108,8 +108,12 @@ public class ChunkPopulateListener implements Listener {
             return;
         }
 
-        block.setDirectionX(random.nextInt(16));
-        block.setDirectionZ(random.nextInt(16));
+        block.setDirectionX(
+            random.nextInt(16)
+        );
+        block.setDirectionZ(
+            random.nextInt(16)
+        );
         if (debug) {
             plugin.info("&9[Debug Mode] &eTrying to paste structure");
         }
@@ -318,14 +322,14 @@ public class ChunkPopulateListener implements Listener {
         }
 
         if (debug) {
-            plugin.info("Spawning structure id: " + structure.getId() + " at: x=" + block.getDirectionX() + ", y=" + block.getHeight() + ", z=" + block.getDirectionZ());
+            plugin.info("Spawning structure id: " + structure.getId() + " at: x=" + block.getConvertedDirectionX() + ", y=" + block.getHeight() + ", z=" + block.getConvertedDirectionZ());
         }
 
         PluginConsumer.process(
             () -> {
                 Operation operation = new ClipboardHolder(clipboard)
                         .createPaste(session)
-                        .to(BlockVector3.at(block.getDirectionX(), block.getHeight(), block.getDirectionZ()))
+                        .to(BlockVector3.at(block.getConvertedDirectionX(), block.getHeight(), block.getConvertedDirectionZ()))
                         .ignoreAirBlocks(!structurePlace.isPasteAir())
                         .copyBiomes(structurePlace.isPasteBiome())
                         .copyEntities(structurePlace.isPasteEntities())
@@ -344,7 +348,7 @@ public class ChunkPopulateListener implements Listener {
             locations.addAll(plugin.getSettings().getStringList("spawned-structures." + block.getWorldName()));
         }
 
-        locations.add("Structure: " + structure.getId() + "; x=" + block.getDirectionX() + " y=" + block.getHeight() + " z=" + block.getDirectionZ());
+        locations.add("Structure: " + structure.getId() + "; x=" + block.getConvertedDirectionX() + " y=" + block.getHeight() + " z=" + block.getConvertedDirectionZ());
 
         plugin.getSettings().set(
             "spawned-structures." + block.getWorldName(), locations
@@ -387,10 +391,10 @@ public class ChunkPopulateListener implements Listener {
             int z2 = splitValues.length >= 3 && !splitValues[1].isEmpty() ? PluginTools.isNumber(splitValues[2]) ? Integer.parseInt(splitValues[2]) : 0 : 0;
 
             if (debug) {
-                plugin.info("Checking: x1: " + block.getDirectionX() + " with x2: " + x2 + ", y1: " + block.getHeight() + " with y2: " + y2 + " and z1: " + block.getDirectionZ() + " with x2: " + z2);
+                plugin.info("Checking: x1: " + block.getConvertedDirectionX() + " with x2: " + x2 + ", y1: " + block.getHeight() + " with y2: " + y2 + " and z1: " + block.getConvertedDirectionZ() + " with x2: " + z2);
             }
 
-            double distance = Math.sqrt(Math.pow(x2 - block.getDirectionX(), 2) + Math.pow(y2 - block.getHeight(), 2) + Math.pow(z2 - block.getDirectionZ(), 2));
+            double distance = Math.sqrt(Math.pow(x2 - block.getConvertedDirectionX(), 2) + Math.pow(y2 - block.getHeight(), 2) + Math.pow(z2 - block.getConvertedDirectionZ(), 2));
 
             if (distance <= place.getRadius()) {
                 return true;

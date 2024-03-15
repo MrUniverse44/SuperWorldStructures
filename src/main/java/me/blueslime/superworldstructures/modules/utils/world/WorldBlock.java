@@ -93,6 +93,14 @@ public class WorldBlock {
         height--;
     }
 
+    public int getConvertedDirectionX() {
+        return chunk.getX() + directionX;
+    }
+
+    public int getConvertedDirectionZ() {
+        return chunk.getZ() + directionZ;
+    }
+
     public boolean isSolid(int blacklistedWaterLevel, int directionX, int height, int directionZ) {
         BlockData data = world.getBlockAt(chunk.getX() + directionX, height,chunk.getZ() + directionZ).getState().getBlockData();
 
