@@ -18,6 +18,7 @@ import me.blueslime.superworldstructures.modules.structures.type.Structure;
 import me.blueslime.superworldstructures.modules.utils.chunk.ChunkData;
 import me.blueslime.superworldstructures.modules.utils.world.WorldBlock;
 import me.blueslime.superworldstructures.modules.worlds.Worlds;
+import me.blueslime.utilitiesapi.tools.PluginTools;
 import me.blueslime.utilitiesapi.utils.consumer.PluginConsumer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -304,6 +305,19 @@ public class ChunkPopulateListener implements Listener {
         }
 
         if (debug) {
+            plugin.info("Checking collision for this location.");
+        }
+
+        if (structurePlace.isCollision() && plugin.getSettings().contains("spawned-structures." + block.getWorldName())) {
+            if (isCorrectDistance(structurePlace, block)) {
+                if (debug) {
+                    plugin.info("Plugin decided to cancel the placement of a structure due to a collision with other structure.");
+                }
+                return;
+            }
+        }
+
+        if (debug) {
             plugin.info("Spawning structure id: " + structure.getId() + " at: x=" + block.getDirectionX() + ", y=" + block.getHeight() + ", z=" + block.getDirectionZ());
         }
 
@@ -312,7 +326,7 @@ public class ChunkPopulateListener implements Listener {
                 Operation operation = new ClipboardHolder(clipboard)
                         .createPaste(session)
                         .to(BlockVector3.at(block.getDirectionX(), block.getHeight(), block.getDirectionZ()))
-                        .ignoreAirBlocks(structurePlace.isPasteAir())
+                        .ignoreAirBlocks(!structurePlace.isPasteAir())
                         .copyBiomes(structurePlace.isPasteBiome())
                         .copyEntities(structurePlace.isPasteEntities())
                         .build();
@@ -337,5 +351,36 @@ public class ChunkPopulateListener implements Listener {
         );
 
         plugin.saveConfiguration(plugin.getSettings(), "settings.yml");
+    }
+
+    public boolean isCorrectDistance(StructurePlace place, WorldBlock block) {
+        for (String location : plugin.getSettings().getStringList("spawned-structures." + block.getWorldName())) {
+            String[] split = location.replace(" ", "").split(";", 2);
+
+            String id = split[0].replace("Structure:", "");
+
+            if (place.isCheck() && !id.equals(place.getStructureId())) {
+                continue;
+            }
+
+            String defValues = split.length >= 2 ? split[1] : "x=0y=0z=0";
+
+            defValues = defValues.replace("x=", ",")
+                    .replace("y=", ",")
+                    .replace("z=", ",");
+
+            String[] splitValues = defValues.split(",", 3);
+
+            int x2 = splitValues.length >= 1 && !splitValues[0].isEmpty() ? PluginTools.isNumber(splitValues[0]) ? Integer.parseInt(splitValues[0]) : 0 : 0;
+            int y2 = splitValues.length >= 2 && !splitValues[1].isEmpty() ? PluginTools.isNumber(splitValues[1]) ? Integer.parseInt(splitValues[1]) : 0 : 0;
+            int z2 = splitValues.length >= 3 && !splitValues[1].isEmpty() ? PluginTools.isNumber(splitValues[2]) ? Integer.parseInt(splitValues[2]) : 0 : 0;
+
+            double distance = Math.sqrt(Math.pow(x2 - block.getDirectionX(), 2) + Math.pow(y2 - block.getHeight(), 2) + Math.pow(z2 - block.getDirectionZ(), 2));
+
+            if (distance <= place.getRadius()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -12,9 +12,12 @@ public class StructurePlace {
     private final StructureSpace space;
     private final boolean pasteBiome;
     private final int basementDepth;
+    private final boolean collision;
     private final int spawnChance;
     private final String rotation;
+    private final boolean check;
     private final boolean air;
+    private final int radius;
     private final String id;
     private final int maxY;
     private final int minY;
@@ -32,7 +35,10 @@ public class StructurePlace {
         boolean air,
         int maxY,
         int minY,
-        int max
+        int max,
+        boolean collision,
+        int radius,
+        boolean check
     ) {
         this.biomes.addAll(biomes);
 
@@ -40,7 +46,10 @@ public class StructurePlace {
         this.pasteEntities = pasteEntities;
         this.spawnChance = spawnChance;
         this.pasteBiome = pasteBiome;
+        this.collision = collision;
         this.rotation = rotation;
+        this.radius = radius;
+        this.check = check;
         this.space = StructureSpace.fromString(space);
         this.maxY = maxY;
         this.minY = minY;
@@ -62,7 +71,10 @@ public class StructurePlace {
             configuration.getBoolean(path + ".air", false),
             configuration.getInt(path + ".anywhere.maxY", 80),
             configuration.getInt(path + ".anywhere.minY", 80),
-            configuration.getInt(path + ".max", -1)
+            configuration.getInt(path + ".max", -1),
+            configuration.getBoolean(path + ".prevent-collision-with-other-structure.enabled", true),
+            configuration.getInt(path + ".prevent-collision-with-other-structure.radius", 15),
+            configuration.getBoolean(path + ".prevent-collision-with-other-structure.only-check-with-this-structure-id", false)
         );
     }
 
@@ -116,6 +128,16 @@ public class StructurePlace {
         return pasteBiome;
     }
 
+    public boolean isCollision() {
+        return collision;
+    }
+    public int getRadius() {
+        return radius;
+    }
+
+    public boolean isCheck() {
+        return check;
+    }
 
     public boolean isPasteEntities() {
         return pasteEntities;

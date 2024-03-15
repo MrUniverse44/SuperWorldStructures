@@ -28,6 +28,10 @@ structures:
       - "HOUSE.schem"
     places:
       '1':
+        prevent-collision-with-other-structure:
+          only-check-with-this-structure-id: false
+          enabled: true
+          radius: 15
         basement-depth: 0
         spawn-chance: 10
         rotation: RANDOM
