@@ -22,17 +22,17 @@ import me.blueslime.utilitiesapi.tools.PluginTools;
 import me.blueslime.utilitiesapi.utils.consumer.PluginConsumer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.world.ChunkPopulateEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class ChunkPopulateListener implements Listener {
+public class ChunkLoadListener implements Listener {
     private final SuperWorldStructures plugin;
 
-    public ChunkPopulateListener(SuperWorldStructures plugin) {
+    public ChunkLoadListener(SuperWorldStructures plugin) {
         this.plugin = plugin;
     }
 
@@ -73,7 +73,10 @@ public class ChunkPopulateListener implements Listener {
 
     @SuppressWarnings("CallToPrintStackTrace")
     @EventHandler
-    public void on(ChunkPopulateEvent event) {
+    public void on(ChunkLoadEvent event) {
+        if (!event.isNewChunk()) {
+            return;
+        }
 
         ChunkData data = ChunkData.build(
                 event.getChunk(),

@@ -2,7 +2,7 @@ package me.blueslime.superworldstructures;
 
 import me.blueslime.superworldstructures.modules.PluginModule;
 import me.blueslime.superworldstructures.modules.commands.Commands;
-import me.blueslime.superworldstructures.modules.listeners.world.ChunkPopulateListener;
+import me.blueslime.superworldstructures.modules.listeners.world.ChunkLoadListener;
 import me.blueslime.superworldstructures.modules.logger.ConsoleLogger;
 import me.blueslime.superworldstructures.modules.plugin.Plugin;
 import me.blueslime.superworldstructures.modules.settings.Settings;
@@ -42,7 +42,7 @@ public final class SuperWorldStructures extends Plugin {
         // Register listeners.
 
         registerListeners(
-            new ChunkPopulateListener(this)
+            new ChunkLoadListener(this)
         ).register();
     }
 
